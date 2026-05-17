@@ -1,6 +1,7 @@
 "use client"
 
 import { RegionState } from '@/datatype/typing';
+import { Capitalism } from '@/services/helper';
 import React, { useEffect, useState} from 'react'
 
 type RegionProps = {
@@ -17,7 +18,7 @@ function RegionFilter({regprops, setRegprops}: RegionProps) {
         const data = await fetch(`/api/filters/region`)
         const parsed = await data.json() 
         const formatted = parsed.message
-        const mapped = formatted.map((item: any) => item.region)
+        const mapped = formatted.map((item: any) => Capitalism(item.region))
         return mapped
     }
 
@@ -27,7 +28,7 @@ function RegionFilter({regprops, setRegprops}: RegionProps) {
   return (
     <div className="flex flex-col">
       <label htmlFor="select-region">Select Region</label>
-      <select id="select-region" value={regprops} onChange={(event) => setRegprops(event.target.value)} {cname} >
+      <select id="select-region" value={regprops} onChange={(event) => setRegprops(event.target.value)}  >
         <option value="">--</option>
         {region.map((item, index) => (
             <option value={item} key={index}> {item}</option>

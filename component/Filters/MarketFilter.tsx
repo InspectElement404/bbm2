@@ -1,19 +1,16 @@
 "use client "
 
+import { Capitalism } from '@/services/helper';
 import React , {useEffect, useState}from 'react'
-
-
-type cName = {
-  disabled: boolean
-}
 
 type MarketProps = {
   marketprops: string, 
   setMarketprops: React.Dispatch<React.SetStateAction<string>>,
-  immobilize: cName
+  disabled: boolean
+
 }
 
-export default function MarketFilter({marketprops, setMarketprops, immobilize}: MarketProps) {
+export default function MarketFilter({marketprops, setMarketprops, disabled} : MarketProps) {
 
     const [result, setResult] = useState([]);
     const [mercado, setMercado] = useState("")
@@ -22,7 +19,7 @@ export default function MarketFilter({marketprops, setMarketprops, immobilize}: 
     async function fetchMarketData(region: string) {
         const dataresult = await fetch(`/api/filters/market?region=${region}`)
         const parsed = await dataresult.json()
-        const formatted = parsed.message?.map((items: any) => items.market)
+        const formatted = (parsed.success) ? parsed.message.map((items: any) => Capitalism(items.market)) : []
         return formatted
     }
 
@@ -39,7 +36,7 @@ export default function MarketFilter({marketprops, setMarketprops, immobilize}: 
       <label htmlFor='set-market'>
         Select Market
       </label>
-      <select id='set-market' value={mercado} onChange={(e) => setMercado(e.target.value)} {...cName}>
+      <select id='set-market' disabled={disabled} value={mercado} onChange={(e) => setMercado(e.target.value)} >
         <option value=""> -- </option>
         {result.map((item, index) => (
             <option value={item} key={index}> {item}</option>

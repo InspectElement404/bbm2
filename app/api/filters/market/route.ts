@@ -8,14 +8,21 @@ export async function GET(request: Request) {
 
     try {
         if (params) {
+            console.log("Inside params:::")
             const querying = await pool.query(
-                `SELECT DISTINCT market from public.master_prices WHERE region='${params}';`
+                `SELECT DISTINCT market from public.master_prices WHERE region ILIKE '${params}';`
             )
             const rowing = await querying.rows 
             return NextResponse.json({
                 success: true, 
                 message: rowing
             })
+        } else {
+            return NextResponse.json({
+                success: true, 
+                message: []
+            })
+
         }
 
     }
