@@ -7,13 +7,14 @@ type MarketProps = {
   marketprops: string, 
   setMarketprops: React.Dispatch<React.SetStateAction<string>>,
   disabled: boolean
+  marketing: string
 
 }
 
-export default function MarketFilter({marketprops, setMarketprops, disabled} : MarketProps) {
+export default function MarketFilter({marketprops, setMarketprops, disabled, marketing} : MarketProps) {
 
     const [result, setResult] = useState([]);
-    const [mercado, setMercado] = useState("")
+
     
 
     async function fetchMarketData(region: string) {
@@ -27,16 +28,14 @@ export default function MarketFilter({marketprops, setMarketprops, disabled} : M
         fetchMarketData(marketprops).then((res) => setResult(res))
     }, [marketprops])
 
-    useEffect(()=> {
-      setMarketprops(mercado)
-    }, [mercado])
+
 
   return (
     <div className="flex flex-col">
       <label htmlFor='set-market'>
         Select Market
       </label>
-      <select id='set-market' disabled={disabled} value={mercado} onChange={(e) => setMercado(e.target.value)} >
+      <select id='set-market' disabled={disabled} value={marketing} onChange={(e) => setMarketprops(e.target.value)} >
         <option value=""> -- </option>
         {result.map((item, index) => (
             <option value={item} key={index}> {item}</option>
