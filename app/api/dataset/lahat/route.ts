@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     // console.log(params)
     const searchResult = await pool.query(`
         SELECT DISTINCT ON (commodity) region, type, commodity, specifications, market, price from public.master_prices
-        WHERE region = '${params}'
+        WHERE region = '${params}' and price is not null
         LIMIT 100;
         `)
     /*
@@ -19,12 +19,14 @@ export async function GET(request: Request) {
     */
     const rowing = searchResult.rows
 
-    if (rowing) {
+    if (rowing.length > 1) {
+        console.log(`Row Length: ${rowing.length}`)
         return NextResponse.json({
             success: true,
             data: rowing
         })
     } else {
+        console.log(`No rows satisfied the condition. `)
         return NextResponse.json({
             success: false,
             data: []
